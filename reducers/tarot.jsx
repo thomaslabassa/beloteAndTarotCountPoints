@@ -63,7 +63,7 @@ export const userSlice = createSlice({
 
             }
         },
-
+        // delete all games in a game
         deleteGame: (state, action) => {
             const indexToDelete = action.payload;
 
@@ -71,6 +71,15 @@ export const userSlice = createSlice({
                 state.value.games.splice(indexToDelete, 1);
             }
         },
+        // delete a single game in a game: pas fonctionnel à retravailler
+        // deleteSingleGame: (state, action) => {
+        //     const indexGameWheteToDelete = action.payload.indexGameWhereToDelete;
+        //     const indexSingleGametoDelete=action.payload.indexGametoDelete
+
+        //     if (indexToDelete >= 0 && indexToDelete < state.value.games.length) {
+        //         state.value.games.splice(indexToDelete, 1);
+        //     }
+        // },
 
     },
 });

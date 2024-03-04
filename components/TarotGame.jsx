@@ -13,6 +13,8 @@ export default function TarotGame(props, { navigation }) {
     // console.log(props.route.params)
     const [isFourPlayer, setIsFourPlayer] = useState(props.route.params.isFourPlayer);
     const [modalVisible, setModalVisible] = useState(false); // faire apparaitre modal décompte points
+    const [modalStatsVisible, setModalStatsVisible] = useState(false); // faire apparaitre modal avec les stats de la partie
+    const [modalDeleteGameVisible, setModalDeleteGameVisible] = useState(false); // faire apparaitre pour supprimer une partie en particulier
     const [selectedPlayer, setSelectedPlayer] = useState(null); // joueur qui prends
     const [calledPlayer, setCalledPlayer] = useState(null); // joueur appelé si 5 joueurs
     const [chosenContract, setChosenContract] = useState(null); // contrat du preneur
@@ -146,7 +148,7 @@ export default function TarotGame(props, { navigation }) {
     }
     // console.log(isGameWon)
     // console.log('points', pointsCalculation())
-    console.log(isFourPlayer)
+    //console.log(isFourPlayer)
     const gameValidation = () => {
         if (selectedPlayer === null || chosenContract === null) {
             // message erreur
@@ -290,7 +292,9 @@ export default function TarotGame(props, { navigation }) {
                 <View>
                     {gameStore.games[indexGame].firstPlayer.game.map((data, i) => (
                         <View key={i} style={{ marginBottom: 10, height: 25, justifyContent: 'center' }}>
-                            <Text > {i + 1}</Text>
+                            <TouchableOpacity onPress={() => setModalDeleteGameVisible(!modalDeleteGameVisible)}>
+                                <Text > {i + 1}</Text>
+                            </TouchableOpacity>
                         </View>
                     ))}
                 </View>
@@ -313,6 +317,9 @@ export default function TarotGame(props, { navigation }) {
             </View>
             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ width: '100%', height: '5%', backgroundColor: 'green', alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Ajouter une  partie</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalStatsVisible(!modalStatsVisible)} style={{ width: '100%', height: '5%', backgroundColor: 'yellow', alignItems: 'center', justifyContent: 'center' }}>
+                <Text>Voir les statistiques de la partie</Text>
             </TouchableOpacity>
             <Modal
                 animationType="slide"
@@ -428,9 +435,38 @@ export default function TarotGame(props, { navigation }) {
                         <Text>Valider</Text>
                     </TouchableOpacity>
                 </View>
-
-
             </Modal >
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalDeleteGameVisible}
+                onRequestClose={() => {
+                    setModalDeleteGameVisible(!modalDeleteGameVisible);
+                }}>
+                <View style={{ backgroundColor: 'white', height: '20%', justifyContent: 'space-between', padding: 10 }}>
+                    <Text>Etes Vous sur de vouloir supprimer la partie  ?</Text>
+                    <TouchableOpacity >
+                        <Text>Oui</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Text>Non</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal >
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalStatsVisible}
+                onRequestClose={() => {
+                    setModalStatsVisible(!modalStatsVisible);
+                }}>
+                <View style={{ backgroundColor: 'white', height: '20%', justifyContent: 'space-between', padding: 10 }}>
+                    <Text>aqui</Text>
+                </View>
+            </Modal >
+
 
         </View >
     );
@@ -442,6 +478,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         paddingTop: '10%',
+        paddingBottom: '10%'
 
 
     },
