@@ -71,17 +71,28 @@ export const userSlice = createSlice({
                 state.value.games.splice(indexToDelete, 1);
             }
         },
-        // delete a single game in a game: pas fonctionnel à retravailler
-        // deleteSingleGame: (state, action) => {
-        //     const indexGameWheteToDelete = action.payload.indexGameWhereToDelete;
-        //     const indexSingleGametoDelete=action.payload.indexGametoDelete
+        // delete a single game in a game
+        deleteSingleGame: (state, action) => {
+            const indexGameWheteToDelete = action.payload.indexGameWhereToDelete;
+            const indexSingleGametoDelete = action.payload.indexGametoDelete
 
-        //     if (indexToDelete >= 0 && indexToDelete < state.value.games.length) {
-        //         state.value.games.splice(indexToDelete, 1);
-        //     }
-        // },
+            if (indexGameWheteToDelete >= 0 && indexGameWheteToDelete < state.value.games.length) {
+
+                state.value.games[indexGameWheteToDelete].firstPlayer.game.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].secondPlayer.game.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].thirdPlayer.game.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].forthPlayer.game.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].fifthPlayer.game.splice(indexSingleGametoDelete, 1);
+
+                state.value.games[indexGameWheteToDelete].firstPlayer.preneur.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].secondPlayer.preneur.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].thirdPlayer.preneur.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].forthPlayer.preneur.splice(indexSingleGametoDelete, 1);
+                state.value.games[indexGameWheteToDelete].fifthPlayer.preneur.splice(indexSingleGametoDelete, 1);
+            }
+        },
 
     },
 });
-export const { create, deleteGame, addGame } = userSlice.actions;
+export const { create, deleteGame, addGame, deleteSingleGame } = userSlice.actions;
 export default userSlice.reducer;

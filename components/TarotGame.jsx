@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Slider from '@react-native-community/slider';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addGame } from '../reducers/tarot';
+import { addGame, deleteSingleGame } from '../reducers/tarot';
 
 export default function TarotGame(props, { navigation }) {
 
@@ -22,6 +22,7 @@ export default function TarotGame(props, { navigation }) {
     const [contractValue, setContractValue] = useState(null); // valeur du slider
     const [isGameWon, setIsGameWon] = useState(null) // nombre de points necessaires pour gagner la partie 
     const [isAlone, setIsAlone] = useState(false)//nom d'un joueur si il est seul dans une aprtir à 5
+    const [indexGameToDelete, setIndexGameToDelete] = useState(null) // index de la partie unique à supprimer
 
     const [name, setName] = useState({
         first: props.route.params.data.first,
@@ -37,7 +38,7 @@ export default function TarotGame(props, { navigation }) {
 
     const gameStore = useSelector((state) => state.tarot.value);
     const indexGame = props.route.params.index //index de la partie dans le tableau games du reducer
-    console.log(gameStore.games[indexGame])
+    console.log('ici', gameStore.games)
 
     useEffect(() => {
         const calculContrat = () => {
@@ -146,7 +147,7 @@ export default function TarotGame(props, { navigation }) {
         }
         return earnPoints
     }
-    // console.log(isGameWon)
+    console.log(indexGameToDelete)
     // console.log('points', pointsCalculation())
     //console.log(isFourPlayer)
     const gameValidation = () => {
@@ -242,6 +243,7 @@ export default function TarotGame(props, { navigation }) {
         )
     }
 
+
     return (
         <View style={styles.container}>
 
@@ -292,7 +294,7 @@ export default function TarotGame(props, { navigation }) {
                 <View>
                     {gameStore.games[indexGame].firstPlayer.game.map((data, i) => (
                         <View key={i} style={{ marginBottom: 10, height: 25, justifyContent: 'center' }}>
-                            <TouchableOpacity onPress={() => setModalDeleteGameVisible(!modalDeleteGameVisible)}>
+                            <TouchableOpacity onPress={() => { setIndexGameToDelete(i), setModalDeleteGameVisible(!modalDeleteGameVisible) }}>
                                 <Text > {i + 1}</Text>
                             </TouchableOpacity>
                         </View>
@@ -446,7 +448,10 @@ export default function TarotGame(props, { navigation }) {
                 }}>
                 <View style={{ backgroundColor: 'white', height: '20%', justifyContent: 'space-between', padding: 10 }}>
                     <Text>Etes Vous sur de vouloir supprimer la partie  ?</Text>
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => dispatch(deleteSingleGame({
+                        indexGameWhereToDelete: indexGame,
+                        indexGametoDelete: indexGameToDelete
+                    }))}>
                         <Text>Oui</Text>
                     </TouchableOpacity>
                     <TouchableOpacity>
