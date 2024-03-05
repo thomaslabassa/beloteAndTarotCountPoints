@@ -264,12 +264,16 @@ export default function TarotGame(props, { navigation }) {
             { name: name.second, total: totalPoints(gameStore.games[indexGame].secondPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].secondPlayer.preneur) },
             { name: name.third, total: totalPoints(gameStore.games[indexGame].thirdPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].thirdPlayer.preneur) },
             { name: name.forth, total: totalPoints(gameStore.games[indexGame].forthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].forthPlayer.preneur) },
-            { name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur) },
         ]
+        if (!isFourPlayer) {
+            arr.push({ name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur) });
+        }
         console.log(arr)
-        arr.sort((a, b) => b.total - a.total)
-        setArrRankingsPoints(arr)
-        let arrPreneur = arr
+        let arrPoints = [...arr]
+        arrPoints.sort((a, b) => b.total - a.total)
+        setArrRankingsPoints(arrPoints)
+
+        let arrPreneur = [...arr]
         arrPreneur.sort((a, b) => b.preneur - a.preneur)
         setArrRankingsPreneur(arrPreneur)
 
