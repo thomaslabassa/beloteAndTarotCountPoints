@@ -23,6 +23,9 @@ export default function TarotGame(props, { navigation }) {
     const [isGameWon, setIsGameWon] = useState(null) // nombre de points necessaires pour gagner la partie 
     const [isAlone, setIsAlone] = useState(false)//nom d'un joueur si il est seul dans une aprtir à 5
     const [indexGameToDelete, setIndexGameToDelete] = useState(null) // index de la partie unique à supprimer
+    const [missingInfo, setMissingInfo] = useState(false) // check to validate game
+    const [arrRankingsPoints, setArrRankingsPoints] = useState(null)// tableau claseement joueurs par points
+    const [arrRankingsPreneur, setArrRankingsPreneur] = useState(null)// tableau claseement joueurs par nombre de fois pris
 
     const [name, setName] = useState({
         first: props.route.params.data.first,
@@ -38,7 +41,7 @@ export default function TarotGame(props, { navigation }) {
 
     const gameStore = useSelector((state) => state.tarot.value);
     const indexGame = props.route.params.index //index de la partie dans le tableau games du reducer
-    console.log('ici', gameStore.games)
+    console.log('ici', gameStore.games[indexGame])
 
     useEffect(() => {
         const calculContrat = () => {
@@ -65,6 +68,19 @@ export default function TarotGame(props, { navigation }) {
         }
         Alone()
     }, [selectedPlayer, calledPlayer]);
+
+    useEffect(() => {
+        const allData = () => {
+            if (selectedPlayer === null || chosenContract === null) {
+                setMissingInfo(false)
+            } else {
+                setMissingInfo(true)
+            }
+        }
+        allData()
+    }, [selectedPlayer, chosenContract]);
+
+
 
 
 
@@ -147,13 +163,14 @@ export default function TarotGame(props, { navigation }) {
         }
         return earnPoints
     }
-    console.log(indexGameToDelete)
+    //console.log(indexGameToDelete)
     // console.log('points', pointsCalculation())
     //console.log(isFourPlayer)
     const gameValidation = () => {
         if (selectedPlayer === null || chosenContract === null) {
-            // message erreur
+            setMissingInfo(false)
         } else {
+            setMissingInfo(true)
             if (isFourPlayer) {
                 dispatch(addGame({
                     index: indexGame,
@@ -186,23 +203,23 @@ export default function TarotGame(props, { navigation }) {
                 dispatch(addGame({
                     index: indexGame,
                     firstPlayer: {
-                        points: isAlone && selectedPlayer === name.first ? pointsCalculation() * 4 : selectedPlayer === name.first ? pointsCalculation() * 3 : calledPlayer === name.first ? pointsCalculation() : -pointsCalculation(),
+                        points: isAlone && selectedPlayer === name.first ? pointsCalculation() * 4 : selectedPlayer === name.first ? pointsCalculation() * 2 : calledPlayer === name.first ? pointsCalculation() : -pointsCalculation(),
                         isPreneur: selectedPlayer === name.first ? chosenContract : false
                     },
                     secondPlayer: {
-                        points: isAlone && selectedPlayer === name.second ? pointsCalculation() * 4 : selectedPlayer === name.second ? pointsCalculation() * 3 : calledPlayer === name.second ? pointsCalculation() : -pointsCalculation(),
+                        points: isAlone && selectedPlayer === name.second ? pointsCalculation() * 4 : selectedPlayer === name.second ? pointsCalculation() * 2 : calledPlayer === name.second ? pointsCalculation() : -pointsCalculation(),
                         isPreneur: selectedPlayer === name.second ? chosenContract : false
                     },
                     thirdPlayer: {
-                        points: isAlone && selectedPlayer === name.third ? pointsCalculation() * 4 : selectedPlayer === name.third ? pointsCalculation() * 3 : calledPlayer === name.third ? pointsCalculation() : -pointsCalculation(),
+                        points: isAlone && selectedPlayer === name.third ? pointsCalculation() * 4 : selectedPlayer === name.third ? pointsCalculation() * 2 : calledPlayer === name.third ? pointsCalculation() : -pointsCalculation(),
                         isPreneur: selectedPlayer === name.third ? chosenContract : false
                     },
                     forthPlayer: {
-                        points: isAlone && selectedPlayer === name.forth ? pointsCalculation() * 4 : selectedPlayer === name.forth ? pointsCalculation() * 3 : calledPlayer === name.forth ? pointsCalculation() : -pointsCalculation(),
+                        points: isAlone && selectedPlayer === name.forth ? pointsCalculation() * 4 : selectedPlayer === name.forth ? pointsCalculation() * 2 : calledPlayer === name.forth ? pointsCalculation() : -pointsCalculation(),
                         isPreneur: selectedPlayer === name.forth ? chosenContract : false
                     },
                     fifthPlayer: {
-                        points: isAlone && selectedPlayer === name.fifth ? pointsCalculation() * 4 : selectedPlayer === name.fifth ? pointsCalculation() * 3 : calledPlayer === name.fifth ? pointsCalculation() : -pointsCalculation(),
+                        points: isAlone && selectedPlayer === name.fifth ? pointsCalculation() * 4 : selectedPlayer === name.fifth ? pointsCalculation() * 2 : calledPlayer === name.fifth ? pointsCalculation() : -pointsCalculation(),
                         isPreneur: selectedPlayer === name.fifth ? chosenContract : false
                     },
                 }))
@@ -226,10 +243,38 @@ export default function TarotGame(props, { navigation }) {
     }, [modalVisible]);
 
     const totalPoints = (arr) => {
-        let sum = 0;
-        arr.forEach((el) => sum += el);
+        let sum = 0
+        arr.forEach((el) => sum += el)
         return sum
     }
+
+    useEffect(() => {
+
+        const howManyPreneur = (arr) => {
+            let sum = 0
+            arr.forEach((el) => {
+                if (el !== false) {
+                    sum++
+                }
+            });
+            return sum;
+        }
+        let arr = [
+            { name: name.first, total: totalPoints(gameStore.games[indexGame].firstPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].firstPlayer.preneur) },
+            { name: name.second, total: totalPoints(gameStore.games[indexGame].secondPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].secondPlayer.preneur) },
+            { name: name.third, total: totalPoints(gameStore.games[indexGame].thirdPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].thirdPlayer.preneur) },
+            { name: name.forth, total: totalPoints(gameStore.games[indexGame].forthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].forthPlayer.preneur) },
+            { name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur) },
+        ]
+        console.log(arr)
+        arr.sort((a, b) => b.total - a.total)
+        setArrRankingsPoints(arr)
+        let arrPreneur = arr
+        arrPreneur.sort((a, b) => b.preneur - a.preneur)
+        setArrRankingsPreneur(arrPreneur)
+
+    }, [modalStatsVisible]);
+
 
     const GameStoreToMap = (whichPlayer) => {
         return (whichPlayer.game.map((data, i) => (
@@ -433,7 +478,7 @@ export default function TarotGame(props, { navigation }) {
 
 
                     </View>
-                    <TouchableOpacity onPress={() => gameValidation()} style={{ alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => gameValidation()} style={{ alignItems: 'center', backgroundColor: !missingInfo ? 'red' : 'transparent' }}>
                         <Text>Valider</Text>
                     </TouchableOpacity>
                 </View>
@@ -447,14 +492,17 @@ export default function TarotGame(props, { navigation }) {
                     setModalDeleteGameVisible(!modalDeleteGameVisible);
                 }}>
                 <View style={{ backgroundColor: 'white', height: '20%', justifyContent: 'space-between', padding: 10 }}>
-                    <Text>Etes Vous sur de vouloir supprimer la partie  ?</Text>
-                    <TouchableOpacity onPress={() => dispatch(deleteSingleGame({
-                        indexGameWhereToDelete: indexGame,
-                        indexGametoDelete: indexGameToDelete
-                    }))}>
+                    <Text>Etes vous sur de vouloir supprimer la partie {indexGameToDelete + 1} ?</Text>
+                    <TouchableOpacity onPress={() => {
+                        dispatch(deleteSingleGame({
+                            indexGameWhereToDelete: indexGame,
+                            indexGametoDelete: indexGameToDelete
+                        })), setModalDeleteGameVisible(!modalDeleteGameVisible)
+                    }
+                    }>
                         <Text>Oui</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => setModalDeleteGameVisible(!modalDeleteGameVisible)}>
                         <Text>Non</Text>
                     </TouchableOpacity>
                 </View>
@@ -462,13 +510,32 @@ export default function TarotGame(props, { navigation }) {
 
             <Modal
                 animationType="slide"
-                transparent={true}
                 visible={modalStatsVisible}
                 onRequestClose={() => {
                     setModalStatsVisible(!modalStatsVisible);
                 }}>
-                <View style={{ backgroundColor: 'white', height: '20%', justifyContent: 'space-between', padding: 10 }}>
-                    <Text>aqui</Text>
+                <View style={{ backgroundColor: 'white', height: '100%', justifyContent: 'space-between', padding: 10 }}>
+
+
+                    <View>
+                        <Text>Classement</Text>
+                        {arrRankingsPoints && arrRankingsPoints.map((data, i) => (
+                            <View key={i} >
+
+                                <Text > {data.name}:{data.total}</Text>
+
+                            </View>
+                        ))}
+                        <Text>Nombre de fois pris</Text>
+                        {arrRankingsPreneur && arrRankingsPreneur.map((data, i) => (
+                            <View key={i} >
+
+                                <Text > {data.name}:{data.preneur}</Text>
+
+                            </View>
+                        ))}
+                    </View>
+
                 </View>
             </Modal >
 
