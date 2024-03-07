@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { useState } from 'react';
 import Slider from '@react-native-community/slider';
 import { useEffect } from 'react';
@@ -339,33 +339,35 @@ export default function TarotGame(props, { navigation }) {
                         <Text style={styles.pointsEveryGame}>{totalPoints(gameStore.games[indexGame].fifthPlayer.game)} </Text>
                     </View>)}
             </View>
-            <View style={styles.pointsmap}>
-                <View>
-                    {gameStore.games[indexGame].firstPlayer.game.map((data, i) => (
-                        <View key={i} style={{ marginBottom: 10, height: 25, justifyContent: 'center' }}>
-                            <TouchableOpacity onPress={() => { setIndexGameToDelete(i), setModalDeleteGameVisible(!modalDeleteGameVisible) }}>
-                                <Text > {i + 1}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    ))}
-                </View>
-                <View style={styles.singlePointMap}>
-                    {GameStoreToMap(gameStore.games[indexGame].firstPlayer)}
-                </View>
-                <View style={styles.singlePointMap}>
-                    {GameStoreToMap(gameStore.games[indexGame].secondPlayer)}
-                </View>
-                <View style={styles.singlePointMap}>
-                    {GameStoreToMap(gameStore.games[indexGame].thirdPlayer)}
-                </View>
-                <View style={styles.singlePointMap}>
-                    {GameStoreToMap(gameStore.games[indexGame].forthPlayer)}
-                </View>
-                {props.route.params.data.fifth && (
+            <ScrollView style={styles.pointsmap} >
+                <View style={styles.scrollViewContent}>
+                    <View>
+                        {gameStore.games[indexGame].firstPlayer.game.map((data, i) => (
+                            <View key={i} style={{ marginBottom: 10, height: 25 }}>
+                                <TouchableOpacity onPress={() => { setIndexGameToDelete(i), setModalDeleteGameVisible(!modalDeleteGameVisible) }}>
+                                    <Text > {i + 1}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        ))}
+                    </View>
                     <View style={styles.singlePointMap}>
-                        {GameStoreToMap(gameStore.games[indexGame].fifthPlayer)}
-                    </View>)}
-            </View>
+                        {GameStoreToMap(gameStore.games[indexGame].firstPlayer)}
+                    </View>
+                    <View style={styles.singlePointMap}>
+                        {GameStoreToMap(gameStore.games[indexGame].secondPlayer)}
+                    </View>
+                    <View style={styles.singlePointMap}>
+                        {GameStoreToMap(gameStore.games[indexGame].thirdPlayer)}
+                    </View>
+                    <View style={styles.singlePointMap}>
+                        {GameStoreToMap(gameStore.games[indexGame].forthPlayer)}
+                    </View>
+                    {props.route.params.data.fifth && (
+                        <View style={styles.singlePointMap}>
+                            {GameStoreToMap(gameStore.games[indexGame].fifthPlayer)}
+                        </View>)}
+                </View>
+            </ScrollView>
             <TouchableOpacity onPress={() => setModalVisible(!modalVisible)} style={{ width: '100%', height: '5%', backgroundColor: 'green', alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Ajouter une  partie</Text>
             </TouchableOpacity>
@@ -599,11 +601,14 @@ const styles = StyleSheet.create({
         height: '5%',
     },
     pointsmap: {
-        flexDirection: "row",
-        alignItems: 'flex-start',
-        justifyContent: 'space-around',
         width: '100%',
-        height: '80%',
+    },
+    scrollViewContent: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+
+
     },
     pointsEveryGame: {
         fontSize: 18,
