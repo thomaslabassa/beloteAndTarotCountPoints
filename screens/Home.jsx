@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import React from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView } from 'react-native';
 
 export default function Home({ navigation }) {
 
@@ -11,52 +12,41 @@ export default function Home({ navigation }) {
     }
 
     return (
-        <View >
-            <ImageBackground
-                source={require('../assets/joker.jpg')}
-                resizeMode="cover"
-                style={{
-                    backgroundColor: '#fc0',
-                    width: '100%', // applied to Image
-                    height: '100%',
-                    // justifyContent: 'center',
-                    alignItems: 'center',
-
-                }}>
-                <View style={styles.choix}>
-                    <TouchableOpacity style={styles.jeu} onPress={() => goToBelote()}>
-                        <Text style={styles.texte}>Belote</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => goToTarot()}>
-                        <Text style={styles.texte}>Tarot</Text>
-                    </TouchableOpacity>
-                </View>
-            </ImageBackground>
-
-
-        </View>
+        <SafeAreaView style={styles.container}>
+            <TouchableOpacity style={[styles.side, styles.belote]} onPress={goToBelote}>
+                <Text style={styles.text}>Belote</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
+            <TouchableOpacity style={[styles.side, styles.tarot]} onPress={goToTarot}>
+                <Text style={styles.text}>Tarot</Text>
+            </TouchableOpacity>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
-    },
-    choix: {
-        marginTop: '80%',
-        // backgroundColor: 'blue',
+        flex: 1,
         flexDirection: 'row',
-        height: '10%',
-        width: '55%',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-    },
-    jeu: {
-        // height: '100%',
 
     },
-    texte: {
+    side: {
+        flex: 0.5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    belote: {
+        backgroundColor: '#65ddb7',
+    },
+    tarot: {
+        backgroundColor: '#0077b6',
+    },
+    text: {
         color: 'white',
-        fontSize: 25
-    }
+        fontSize: 25,
+    },
+    separator: {
+        width: 1,
+        backgroundColor: 'black',
+    },
 });

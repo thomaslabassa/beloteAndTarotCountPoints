@@ -119,7 +119,7 @@ export default function TarotGame(props, { navigation }) {
                 { backgroundColor: selectedPlayer === name[data] ? 'green' : 'transparent' },
             ]}
         >
-            <Text>{name[data]}</Text>
+            <Text style={{ fontSize: 20, alignItems: 'center', justifyContent: 'center' }}>{name[data]}</Text>
         </TouchableOpacity>
     ));
     const howManyPlayers = isFourPlayer ? player.slice(0, 4) : player
@@ -268,7 +268,7 @@ export default function TarotGame(props, { navigation }) {
         if (!isFourPlayer) {
             arr.push({ name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur) });
         }
-        console.log(arr)
+        //console.log(arr)
         let arrPoints = [...arr]
         arrPoints.sort((a, b) => b.total - a.total)
         setArrRankingsPoints(arrPoints)
@@ -379,26 +379,26 @@ export default function TarotGame(props, { navigation }) {
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}>
-                <View style={{ backgroundColor: 'white', height: '100%', justifyContent: 'space-between', padding: 20 }}>
+                <View style={{ backgroundColor: 'white', height: '100%', width: '100%', justifyContent: 'space-between' }}>
                     <View >
-                        <Text style={{ textAlign: 'center', fontSize: 20 }}>Qui prends ?</Text>
-                        <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: '8%' }}>
+                        <Text style={{ textAlign: 'center', fontSize: 25 }}>Qui a pris ?</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row', marginTop: '2%', flexWrap: 'wrap' }}>
                             {howManyPlayers}
                         </View>
                     </View>
                     <View>
-                        <Text style={{ textAlign: 'center', fontSize: 20 }}>Quel contrat ?</Text>
-                        <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: '8%' }}>
+                        <Text style={{ textAlign: 'center', fontSize: 25 }}>Quel contrat a été choisi ?</Text>
+                        <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: '2%', flexWrap: 'wrap' }}>
                             {contrat.map((data, i) => (
                                 <TouchableOpacity key={i} style={[styles.contratButton, { backgroundColor: chosenContract === contrat[i] ? 'green' : 'transparent' }]} onPress={() => whichContract(contrat[i])}>
-                                    <Text > {contrat[i]}</Text>
+                                    <Text style={{ fontSize: 15 }}> {contrat[i]}</Text>
                                 </TouchableOpacity>
                             ))}
                         </View>
                     </View>
                     <View>
                         <Text style={{ textAlign: 'center', fontSize: 20 }}>Combien de bouts</Text>
-                        <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: '8%' }}>
+                        <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-around', width: '100%', marginTop: '8%' }}>
                             {oudler.map((data, i) => (
                                 <TouchableOpacity
                                     key={i}
@@ -433,23 +433,33 @@ export default function TarotGame(props, { navigation }) {
 
                     <View>
                         <Text style={{ textAlign: 'center', fontSize: 20 }}>Combien de points ?</Text>
-                        <View style={{ flexDirection: 'row', marginTop: '8%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text >Preneur </Text>
-                            <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: '10%', marginLeft: '10%', marginRight: '10%' }}>
-                                <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}> {contractValue}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => (setContractValue(contractValue + 1))}>
-                                    <Text style={{ fontSize: 20 }}>+</Text>
-                                </TouchableOpacity >
-                                <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}>({contractValue - isGameWon})</Text>
-                                <TouchableOpacity onPress={() => (setContractValue(contractValue - 1))}>
+                        <View >
+                            <View >
+                                <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
+                                    if (contractValue > 0) {
+                                        (setContractValue(contractValue - 1))
+                                    } else {
+                                        setContractValue(0)
+                                    }
+                                }}>
                                     <Text style={{ fontSize: 20 }}>-</Text>
                                 </TouchableOpacity>
+                                <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: '10%', borderRadius: 15 }}>
+                                    <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}> {contractValue}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
+                                    if (contractValue < 91) {
+                                        (setContractValue(contractValue + 1))
+                                    } else {
+                                        setContractValue(91)
+                                    }
+                                }}>
+                                    <Text style={{ fontSize: 20 }}>+</Text>
+                                </TouchableOpacity >
                             </View>
-
-
+                            <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}>({contractValue - isGameWon})</Text>
                         </View>
+
                         <Slider
                             style={{ width: '100%', height: 40 }}
                             onValueChange={(value) => setContractValue(value)}
@@ -521,21 +531,19 @@ export default function TarotGame(props, { navigation }) {
                 <View style={{ backgroundColor: 'white', height: '100%', justifyContent: 'space-between', padding: 10 }}>
 
 
-                    <View>
+                    <View style={{ alignItems: 'center' }}>
+
                         <Text>Classement</Text>
                         {arrRankingsPoints && arrRankingsPoints.map((data, i) => (
                             <View key={i} >
-
-                                <Text > {data.name}:{data.total}</Text>
-
+                                <Text > {data.name}:  {data.total}</Text>
                             </View>
                         ))}
+
                         <Text>Nombre de fois pris</Text>
                         {arrRankingsPreneur && arrRankingsPreneur.map((data, i) => (
                             <View key={i} >
-
-                                <Text > {data.name}:{data.preneur}</Text>
-
+                                <Text > {data.name}:  {data.preneur}</Text>
                             </View>
                         ))}
                     </View>
@@ -560,18 +568,21 @@ const styles = StyleSheet.create({
     },
     playerButton: {
         borderWidth: 1,
-        width: 60,
-        height: 30,
+        width: '25%',
         alignItems: 'center',
         justifyContent: 'center',
+        marginLeft: '5%',
+        marginTop: '5%',
+
 
     },
     contratButton: {
         borderWidth: 1,
-        width: 60,
-        height: 50,
+        width: '20%',
+        height: 45,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginTop: '5%',
     },
     totaux: {
         flexDirection: "row",
@@ -607,5 +618,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
 
+    },
+    buttonMoreLessPoints: {
+        backgroundColor: 'grey',
+        height: 30,
+        width: 30,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
