@@ -41,7 +41,7 @@ export default function TarotGame(props, { navigation }) {
 
     const gameStore = useSelector((state) => state.tarot.value);
     const indexGame = props.route.params.index //index de la partie dans le tableau games du reducer
-    console.log('ici', gameStore.games[indexGame])
+    //console.log('ici', gameStore.games[indexGame])
 
     useEffect(() => {
         const calculContrat = () => {
@@ -119,7 +119,7 @@ export default function TarotGame(props, { navigation }) {
                 { backgroundColor: selectedPlayer === name[data] ? 'green' : 'transparent' },
             ]}
         >
-            <Text style={{ fontSize: 20, alignItems: 'center', justifyContent: 'center' }}>{name[data]}</Text>
+            <Text style={{ fontSize: 15, alignItems: 'center', justifyContent: 'center' }}>{name[data]}</Text>
         </TouchableOpacity>
     ));
     const howManyPlayers = isFourPlayer ? player.slice(0, 4) : player
@@ -249,7 +249,6 @@ export default function TarotGame(props, { navigation }) {
     }
 
     useEffect(() => {
-
         const howManyPreneur = (arr) => {
             let sum = 0
             arr.forEach((el) => {
@@ -259,16 +258,31 @@ export default function TarotGame(props, { navigation }) {
             });
             return sum;
         }
+        const whichHandTaken = (arr) => {
+            let total = { pouce: 0, garde: 0, gardeContre: 0, GardeSans: 0 }
+            arr.forEach((el) => {
+                if (el === 'Pouce') {
+                    total.pouce++
+                } else if (el === 'Garde') {
+                    total.garde++
+                } else if (el === 'Garde Sans') {
+                    total.GardeSans++
+                } else if (el === 'Garde Contre') {
+                    total.gardeContre++
+                }
+            })
+            return total
+        }
         let arr = [
-            { name: name.first, total: totalPoints(gameStore.games[indexGame].firstPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].firstPlayer.preneur) },
-            { name: name.second, total: totalPoints(gameStore.games[indexGame].secondPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].secondPlayer.preneur) },
-            { name: name.third, total: totalPoints(gameStore.games[indexGame].thirdPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].thirdPlayer.preneur) },
-            { name: name.forth, total: totalPoints(gameStore.games[indexGame].forthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].forthPlayer.preneur) },
+            { name: name.first, total: totalPoints(gameStore.games[indexGame].firstPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].firstPlayer.preneur), contrat: whichHandTaken(gameStore.games[indexGame].firstPlayer.preneur) },
+            { name: name.second, total: totalPoints(gameStore.games[indexGame].secondPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].secondPlayer.preneur), contrat: whichHandTaken(gameStore.games[indexGame].secondPlayer.preneur) },
+            { name: name.third, total: totalPoints(gameStore.games[indexGame].thirdPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].thirdPlayer.preneur), contrat: whichHandTaken(gameStore.games[indexGame].thirdPlayer.preneur) },
+            { name: name.forth, total: totalPoints(gameStore.games[indexGame].forthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].forthPlayer.preneur), contrat: whichHandTaken(gameStore.games[indexGame].forthPlayer.preneur) },
         ]
         if (!isFourPlayer) {
-            arr.push({ name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur) });
+            arr.push({ name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur), contrat: whichHandTaken(gameStore.games[indexGame].fifthPlayer.preneur) });
         }
-        //console.log(arr)
+        console.log(arr)
         let arrPoints = [...arr]
         arrPoints.sort((a, b) => b.total - a.total)
         setArrRankingsPoints(arrPoints)
@@ -278,6 +292,7 @@ export default function TarotGame(props, { navigation }) {
         setArrRankingsPreneur(arrPreneur)
 
     }, [modalStatsVisible]);
+
 
 
     const GameStoreToMap = (whichPlayer) => {
@@ -435,33 +450,62 @@ export default function TarotGame(props, { navigation }) {
 
                     <View>
                         <Text style={{ textAlign: 'center', fontSize: 20 }}>Combien de points ?</Text>
-                        <View >
+                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
                             <View >
-                                <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
-                                    if (contractValue > 0) {
-                                        (setContractValue(contractValue - 1))
-                                    } else {
-                                        setContractValue(0)
-                                    }
-                                }}>
-                                    <Text style={{ fontSize: 20 }}>-</Text>
-                                </TouchableOpacity>
-                                <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: '10%', borderRadius: 15 }}>
-                                    <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}> {contractValue}</Text>
+                                <View style={{ flexDirection: 'row' }} >
+                                    <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
+                                        if (contractValue > 0) {
+                                            (setContractValue(contractValue - 1))
+                                        } else {
+                                            setContractValue(0)
+                                        }
+                                    }}>
+                                        <Text style={{ fontSize: 20 }}>-</Text>
+                                    </TouchableOpacity>
+                                    <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: '30%', borderRadius: 15 }}>
+                                        <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}> {contractValue}</Text>
+                                    </View>
+                                    <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
+                                        if (contractValue < 91) {
+                                            (setContractValue(contractValue + 1))
+                                        } else {
+                                            setContractValue(91)
+                                        }
+                                    }}>
+                                        <Text style={{ fontSize: 20 }}>+</Text>
+                                    </TouchableOpacity >
                                 </View>
-                                <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
-                                    if (contractValue < 91) {
-                                        (setContractValue(contractValue + 1))
-                                    } else {
-                                        setContractValue(91)
-                                    }
-                                }}>
-                                    <Text style={{ fontSize: 20 }}>+</Text>
-                                </TouchableOpacity >
+                                <Text style={{ alignItems: 'center', color: isGameWon <= contractValue ? 'green' : 'red' }}>({contractValue - isGameWon})</Text>
                             </View>
-                            <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}>({contractValue - isGameWon})</Text>
-                        </View>
 
+
+                            <View >
+                                <View style={{ flexDirection: 'row' }} >
+                                    <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
+                                        if (contractValue < 91) {
+                                            (setContractValue(contractValue + 1))
+                                        } else {
+                                            setContractValue(91)
+                                        }
+                                    }}>
+                                        <Text style={{ fontSize: 20 }}>-</Text>
+                                    </TouchableOpacity>
+                                    <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: '30%', borderRadius: 15 }}>
+                                        <Text style={{ color: isGameWon <= contractValue ? 'green' : 'red' }}>{91 - contractValue}</Text>
+                                    </View>
+                                    <TouchableOpacity style={styles.buttonMoreLessPoints} onPress={() => {
+                                        if (contractValue > 0) {
+                                            (setContractValue(contractValue - 1))
+                                        } else {
+                                            setContractValue(0)
+                                        }
+                                    }}>
+                                        <Text style={{ fontSize: 20 }}>+</Text>
+                                    </TouchableOpacity >
+                                </View>
+                                <Text style={{ color: isGameWon <= contractValue ? 'red' : 'green' }}>({isGameWon - contractValue})</Text>
+                            </View>
+                        </View>
                         <Slider
                             style={{ width: '100%', height: 40 }}
                             onValueChange={(value) => setContractValue(value)}
@@ -474,23 +518,6 @@ export default function TarotGame(props, { navigation }) {
                             thumbTintColor='#000000'
 
                         />
-                        <View style={{ flexDirection: 'row', marginTop: '8%', alignItems: 'center', justifyContent: 'center' }}>
-                            <Text >Autre équipe </Text>
-                            <View style={{ borderWidth: 1, alignItems: 'center', justifyContent: 'center', width: '10%', marginLeft: '10%', marginRight: '10%' }}>
-                                <Text style={{ color: isGameWon <= contractValue ? 'red' : 'green' }}> {91 - contractValue}</Text>
-                            </View>
-                            <View style={{ flexDirection: 'column', alignItems: 'center' }}>
-                                <TouchableOpacity onPress={() => (setContractValue(contractValue - 1))}>
-                                    <Text style={{ fontSize: 20 }}>+</Text>
-                                </TouchableOpacity >
-                                <Text style={{ color: isGameWon <= contractValue ? 'red' : 'green' }}>({contractValue - isGameWon})</Text>
-                                <TouchableOpacity onPress={() => (setContractValue(contractValue + 1))}>
-                                    <Text style={{ fontSize: 20 }}>-</Text>
-                                </TouchableOpacity>
-                            </View>
-
-
-                        </View>
 
 
                     </View>

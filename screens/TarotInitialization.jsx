@@ -117,11 +117,11 @@ export default function TarotInitialization(props) {
                     <Text style={{ fontSize: 20, marginTop: '5%' }} >Combien de joueurs</Text>
                     <View style={styles.numberPlayer}>
                         <TouchableOpacity onPress={() => { setFourPlayer(true); setFivePlayer(false); setName({ ...name, fifth: null }) }}
-                            style={fourPlayer && { backgroundColor: 'green' }}>
+                            style={[fourPlayer && { backgroundColor: 'green' }, styles.cadreNumberPlayer]}>
                             <Text>4 Joueurs</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setFivePlayer(true); setFourPlayer(false) }}
-                            style={fivePlayer && { backgroundColor: 'green' }}>
+                            style={[fivePlayer && { backgroundColor: 'green' }, styles.cadreNumberPlayer]}>
                             <Text>5 Joueurs</Text>
                         </TouchableOpacity>
                     </View>
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
         height: '20%',
         width: '60%',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
 
 
     },
@@ -222,4 +222,11 @@ const styles = StyleSheet.create({
         height: '12%',
         width: '100%'
     },
+    cadreNumberPlayer: {
+        height: '40%',
+        width: '70%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20
+    }
 });
