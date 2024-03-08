@@ -104,6 +104,7 @@ export default function TarotInitialization(props) {
 
         <View style={styles.container}>
             <Image source={require('../assets/oudler.png')} style={{ width: '100%', height: '29%' }} />
+
             {(!createNewgame && !loadGame) && <View style={{ height: '100%', width: '100%', alignItems: 'center', marginTop: '30%' }}>
                 <TouchableOpacity style={[styles.choix, { backgroundColor: '#0077b6' }]} onPress={() => setCreateNewgame(true)}>
                     <Text style={{ color: 'white', fontSize: 15 }}>Créer une nouvelle partie</Text>
@@ -111,7 +112,9 @@ export default function TarotInitialization(props) {
                 <TouchableOpacity style={[styles.choix, { backgroundColor: '#ff7648' }]} onPress={() => setLoadGame(true)}>
                     <Text style={{ color: 'white', fontSize: 15 }}>Charger une partie existante</Text>
                 </TouchableOpacity>
+
             </View>}
+
             {createNewgame && (
                 <View style={styles.createGame}>
                     <Text style={{ fontSize: 20, marginTop: '5%' }} >Combien de joueurs</Text>
@@ -185,7 +188,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         alignItems: 'center',
-        paddingTop: '10%'
+        paddingTop: '10%',
 
     },
     numberPlayer: {
