@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#65ddb7',
     },
     tarot: {
-        backgroundColor: '#0077b6',
+        backgroundColor: '#4A919E',
     },
     text: {
         color: 'white',

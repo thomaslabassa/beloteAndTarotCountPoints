@@ -7,6 +7,7 @@ import TarotInitialization from './screens/TarotInitialization'
 import BeloteInitialization from './screens/BeloteInitialization';
 import TarotGame from './components/TarotGame';
 import PointsTarot from './components/PointsTarot';
+import BeloteGame from './components/BeloteGame';
 
 import { persistStore, persistReducer } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
@@ -16,13 +17,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import tarot from './reducers/tarot';
+import belote from './reducers/belote';
 
 const persistConfig = {
   key: 'compteurPoint',
   storage: AsyncStorage,
 };
 
-const reducers = combineReducers({ tarot });
+const reducers = combineReducers({ tarot, belote });
 const persistedReducer = persistReducer(persistConfig, reducers);
 
 const store = configureStore({
@@ -46,6 +48,7 @@ export default function App() {
             <Stack.Screen name="BeloteInitialization" component={BeloteInitialization} />
             <Stack.Screen name="TarotGame" component={TarotGame} />
             <Stack.Screen name="PointsTarot" component={PointsTarot} />
+            <Stack.Screen name="BeloteGame" component={BeloteGame} />
           </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>

@@ -36,9 +36,9 @@ export default function TarotInitialization(props) {
             key={i}
             onPress={() => loadOldTarotGame([gameStore.games[i].firstPlayer.name, gameStore.games[i].secondPlayer.name, gameStore.games[i].thirdPlayer.name,
             gameStore.games[i].forthPlayer.name, gameStore.games[i].fifthPlayer.name], i)}
-            style={{ backgroundColor: 'white', height: '5%', marginTop: '5%', justifyContent: 'center' }}
+            style={{ backgroundColor: '#4A919E', height: '5%', marginTop: '5%', justifyContent: 'center' }}
         >
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: '5%', paddingLeft: '5%', backgroundColor: '#0077b6', borderRadius: 15, height: '90%' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingRight: '5%', paddingLeft: '5%', backgroundColor: '#CE6A6B', borderRadius: 15, height: '90%' }}>
                 <Text>{i + 1}</Text>
                 <Text style={{ color: 'black' }}>{gameStore.games[i].firstPlayer.name}</Text>
                 <Text style={{ color: 'black' }}>{gameStore.games[i].secondPlayer.name}</Text>
@@ -103,13 +103,14 @@ export default function TarotInitialization(props) {
     return (
 
         <View style={styles.container}>
-            <Image source={require('../assets/oudler.png')} style={{ width: '100%', height: '29%' }} />
+            {/* <Image source={require('../assets/oudler.png')} style={{ width: '100%', height: '18%', resizeMode: 'contain' }} /> */}
+            <Text style={{ fontSize: 35, color: 'white' }}>Tarot</Text>
 
             {(!createNewgame && !loadGame) && <View style={{ height: '100%', width: '100%', alignItems: 'center', marginTop: '30%' }}>
-                <TouchableOpacity style={[styles.choix, { backgroundColor: '#0077b6' }]} onPress={() => setCreateNewgame(true)}>
-                    <Text style={{ color: 'white', fontSize: 15 }}>Créer une nouvelle partie</Text>
+                <TouchableOpacity style={[styles.choix, { backgroundColor: '#BED3C3' }]} onPress={() => setCreateNewgame(true)}>
+                    <Text style={{ color: 'black', fontSize: 15 }}>Créer une nouvelle partie</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.choix, { backgroundColor: '#ff7648' }]} onPress={() => setLoadGame(true)}>
+                <TouchableOpacity style={[styles.choix, { backgroundColor: '#CE6A6B' }]} onPress={() => setLoadGame(true)}>
                     <Text style={{ color: 'white', fontSize: 15 }}>Charger une partie existante</Text>
                 </TouchableOpacity>
 
@@ -120,12 +121,12 @@ export default function TarotInitialization(props) {
                     <Text style={{ fontSize: 20, marginTop: '5%' }} >Combien de joueurs</Text>
                     <View style={styles.numberPlayer}>
                         <TouchableOpacity onPress={() => { setFourPlayer(true); setFivePlayer(false); setName({ ...name, fifth: null }) }}
-                            style={[fourPlayer && { backgroundColor: 'green' }, styles.cadreNumberPlayer]}>
-                            <Text>4 Joueurs</Text>
+                            style={[fourPlayer && { backgroundColor: '#BED3C3', marginRight: '7%' }, styles.cadreNumberPlayer]}>
+                            <Text style={{ fontSize: 18 }}>4 Joueurs</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { setFivePlayer(true); setFourPlayer(false) }}
-                            style={[fivePlayer && { backgroundColor: 'green' }, styles.cadreNumberPlayer]}>
-                            <Text>5 Joueurs</Text>
+                            style={[fivePlayer && { backgroundColor: '#BED3C3' }, styles.cadreNumberPlayer]}>
+                            <Text style={{ fontSize: 18 }}>5 Joueurs</Text>
                         </TouchableOpacity>
                     </View>
                     < View style={{ width: '100%', height: '45%', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -186,7 +187,7 @@ export default function TarotInitialization(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: '#4A919E',
         alignItems: 'center',
         paddingTop: '10%',
 
@@ -216,7 +217,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: '10%',
-        borderRadius: 15,
+        borderRadius: 25,
 
     },
     input: {

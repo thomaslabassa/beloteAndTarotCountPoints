@@ -284,7 +284,7 @@ export default function TarotGame(props, { navigation }) {
         if (!isFourPlayer) {
             arr.push({ name: name.fifth, total: totalPoints(gameStore.games[indexGame].fifthPlayer.game), preneur: howManyPreneur(gameStore.games[indexGame].fifthPlayer.preneur), contrat: whichHandTaken(gameStore.games[indexGame].fifthPlayer.preneur) });
         }
-        console.log(arr)
+
         let arrPoints = [...arr]
         arrPoints.sort((a, b) => b.total - a.total)
         setArrRankingsPoints(arrPoints)
@@ -292,7 +292,7 @@ export default function TarotGame(props, { navigation }) {
         let arrPreneur = [...arr]
         arrPreneur.sort((a, b) => b.preneur - a.preneur)
         setArrRankingsPreneur(arrPreneur)
-
+        console.log(arr)
     }, [modalStatsVisible]);
 
 
@@ -572,17 +572,19 @@ export default function TarotGame(props, { navigation }) {
 
                     <View style={{ alignItems: 'center' }}>
 
-                        <Text>Classement</Text>
+                        <Text style={{ fontSize: 20, marginTop: '5%', marginBottom: '5%' }}>Classement</Text>
                         {arrRankingsPoints && arrRankingsPoints.map((data, i) => (
                             <View key={i} >
                                 <Text > {i + 1}  {data.name}:  {data.total}</Text>
                             </View>
                         ))}
 
-                        <Text>Nombre de fois pris</Text>
+                        <Text style={{ fontSize: 20, marginTop: '5%', marginBottom: '5%' }}>Nombre de fois pris</Text>
                         {arrRankingsPreneur && arrRankingsPreneur.map((data, i) => (
                             <View key={i} >
-                                <Text > {data.name}:  {data.preneur}</Text>
+                                <TouchableOpacity>
+                                    <Text > {data.name}:  {data.preneur} </Text>
+                                </TouchableOpacity>
                             </View>
                         ))}
                     </View>
